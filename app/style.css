@@ -1,12 +1,138 @@
-html, body { margin: 0; height: 100%; background: #f2f0f4; color: #1d1b22; font: 15px/1.4 system-ui, sans-serif; }
-.app { display: flex; gap: 32px; align-items: center; justify-content: center; height: 100%; padding: 24px; box-sizing: border-box; }
-.controls { display: flex; flex-direction: column; gap: 14px; width: 280px; }
-.controls h1 { margin: 0; font-size: 28px; }
-.controls p { margin: 0; color: #5c5866; }
-label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
-input[type=text] { font: inherit; padding: 8px; border: 1px solid #c9c4d1; border-radius: 6px; }
-button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 6px; background: #1d1b22; color: #fff; cursor: pointer; }
-canvas { width: min(70vh, 60vw); height: min(70vh, 60vw); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-body.shot-cover .controls { display: none; }
-body.shot-cover .app { padding: 0; }
-body.shot-cover canvas { width: 100vw; height: 100vh; box-shadow: none; }
+/* Neon Coast Cover Studio — a dark, neon-lit editor around a pale poster. */
+
+@font-face {
+  font-family: 'Anton';
+  src: url('./fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #12081f radial-gradient(1200px 700px at 85% -10%, #3d1454 0, #12081f 55%);
+  color: #f6ecd9;
+  min-height: 100vh;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 22px;
+  padding: 22px;
+  max-width: 1560px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.controls h1 {
+  font-family: 'Anton', sans-serif;
+  font-size: 34px;
+  letter-spacing: 0.04em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  color: #ffd166;
+}
+.controls h1 span { color: #ff5d8f; }
+
+.lede { margin: 0 0 16px; color: #cdbfd9; line-height: 1.45; font-size: 14px; }
+
+fieldset {
+  border: 1px solid #3a2358;
+  border-radius: 12px;
+  padding: 12px 14px 14px;
+  margin: 0 0 14px;
+  background: rgba(28, 14, 48, 0.72);
+}
+legend {
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #ffb3c8;
+  padding: 0 6px;
+}
+
+label { display: block; font-size: 13px; color: #d9cdea; margin: 8px 0; }
+label input[type='text'] {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #4a2d72;
+  background: #1d0f36;
+  color: #fff7e6;
+  font-size: 15px;
+}
+label input[type='range'] { width: 100%; accent-color: #ff5d8f; }
+label.check { display: flex; align-items: center; gap: 8px; }
+label.check input { accent-color: #ffd166; width: 18px; height: 18px; }
+
+.upload {
+  display: inline-block;
+  background: linear-gradient(90deg, #ff5d8f, #ff8c42);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  margin: 2px 0 10px;
+}
+.upload input { display: none; }
+
+.photo-strip { display: flex; gap: 8px; flex-wrap: wrap; min-height: 54px; }
+.photo-strip img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 3px solid transparent;
+  cursor: pointer;
+}
+.photo-strip img.picked { border-color: #ffd166; }
+
+.button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+button {
+  background: #2a1850;
+  color: #f6ecd9;
+  border: 1px solid #4a2d72;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+button:hover { border-color: #ff5d8f; }
+button.active {
+  background: linear-gradient(90deg, #7b2d8b, #c73e6d);
+  border-color: #ffd166;
+  color: #fff;
+}
+.row { margin-top: 10px; }
+.hint, .stage-hint { font-size: 12.5px; color: #a793c4; line-height: 1.45; }
+.panel-label { margin: 2px 0 6px; font-size: 13px; color: #ffd166; }
+#status { min-height: 18px; font-size: 13px; color: #9be7c4; }
+
+.stage { position: sticky; top: 22px; text-align: center; }
+#stage-canvas {
+  width: min(100%, calc(100vh - 130px));
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px #3a2358;
+  cursor: grab;
+  touch-action: none;
+}
+#stage-canvas:active { cursor: grabbing; }
+
+body.shot-mode { background: #000; }
+body.shot-mode .app { display: block; padding: 0; max-width: none; }
+body.shot-mode .controls, body.shot-mode .stage-hint { display: none; }
+body.shot-mode .stage { position: static; }
+body.shot-mode #stage-canvas { width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; }
+
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .stage { position: static; }
+}

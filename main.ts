@@ -1,17 +1,15 @@
-// A working gta6-cover-art-01 entry (Node 22, standard library only): the app is this directory's app/ folder, plain
-// static files a desktop browser loads offline (app/index.html and its ES modules, no library and no network
-// request), and the program hands it in. It copies app/ and screenshots/ from beside this file to /output and writes
-// /output/dossier.json, the summary the judge reads, with the vendored make.fun library. Only the plumbing, not the
-// cover art the bounty asks for: Cover Snap, a plain one-photo square cover with a sunset tint and a bold caption,
-// exported as a 1080 x 1080 PNG. Its two sample photos (app/samples/) were made for make.fun with an image model and
-// are free to use. Build your own GTA-style cover maker in its place, put your 3 or 4 PNG or JPEG screenshots in
-// screenshots/ (the first by name is the cover) and run it.
+// Neon Coast Cover Studio — a gta6-cover-art-01 entry (Node 22, standard library only). The app in app/ is a
+// multi-panel GTA-style cover maker: it loads a person's own photos on their machine, crops one or several of
+// them into poster panels, runs them through Vice City sunset and neon colour grades, letters a caption in
+// Anton, and exports a PNG at 1080 x 1080, 1080 x 1350 or 1920 x 1080. This program hands the entry in: it
+// copies app/ and screenshots/ from beside this file to /output and writes /output/dossier.json, the summary
+// the judge reads, with the vendored make.fun library.
 //
-// Serve it locally with `node serve.ts`, then open http://localhost:8080.
+// Serve the app locally with `node serve.ts`, then open http://localhost:8080.
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
@@ -38,3 +36,9 @@ writeFileSync(
     app_path_max_bytes: 1000,
   }),
 );
+
+// Neon Coast hand-in report: name what was handed in, so a local run shows the entry's shape — how many app
+// files, how many screenshots, and where the dossier landed — before the scorer ever sees it.
+const handedAppFiles = readdirSync(join(out, 'app'), { recursive: true }).length;
+const handedShots = readdirSync(join(out, 'screenshots')).length;
+console.log(`neon-coast-cover-studio: handed in ${handedAppFiles} app files and ${handedShots} screenshots; dossier at ${join(out, 'dossier.json')}`);

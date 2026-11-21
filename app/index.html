@@ -3,20 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Neon Coast Cover Studio</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
+  <section class="controls" aria-label="Cover controls">
+    <h1>Neon Coast <span>Cover Studio</span></h1>
+    <p class="lede">Your photos, a caption, and one click stand between you and a
+      multi-panel Vice City cover. Photos never leave this machine.</p>
+
+    <fieldset>
+      <legend>1 · Photos</legend>
+      <label class="upload">Add your photos
+        <input id="photo-input" type="file" accept="image/*" multiple>
+      </label>
+      <div id="photo-strip" class="photo-strip" role="listbox" aria-label="Loaded photos"></div>
+      <div class="row">
+        <button id="fill-all" type="button">Fill every panel with the picked photo</button>
+      </div>
+      <p class="hint">Pick a photo, then a panel, or click a panel on the cover
+        and drag the photo inside it. Scroll over the cover to zoom.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>2 · Panels</legend>
+      <div id="layout-row" class="button-row" role="group" aria-label="Panel layout"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>3 · Colour grade</legend>
+      <div id="grade-row" class="button-row" role="group" aria-label="Colour grade"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>4 · Caption</legend>
+      <label>Title <input id="title-input" type="text" maxlength="26" value="Neon Coast"></label>
+      <label>Subtitle <input id="subtitle-input" type="text" maxlength="42" value="Vice Coast · Est. 2026"></label>
+      <label>Title size <input id="title-size" type="range" min="70" max="140" value="100"></label>
+      <label class="check">Heat stars <input id="stars-toggle" type="checkbox" checked></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>5 · Panel crop</legend>
+      <p id="panel-label" class="panel-label">Panel 1 of 4</p>
+      <label>Zoom <input id="zoom-slider" type="range" min="100" max="300" value="100"></label>
+      <label>Slide across <input id="panx-slider" type="range" min="-100" max="100" value="0"></label>
+      <label>Slide down <input id="pany-slider" type="range" min="-100" max="100" value="0"></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>6 · Export the cover</legend>
+      <div class="button-row">
+        <button id="export-square" type="button">PNG 1080 × 1080</button>
+        <button id="export-portrait" type="button">PNG 1080 × 1350</button>
+        <button id="export-wide" type="button">PNG 1920 × 1080</button>
+      </div>
+      <p id="status" role="status"></p>
+    </fieldset>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <section class="stage" aria-label="Cover preview">
+    <canvas id="stage-canvas" width="1080" height="1080"></canvas>
+    <p class="stage-hint">Live preview — the export renders exactly what you see here.</p>
+  </section>
 </main>
 <script type="module" src="./src/main.js"></script>
 </body>
